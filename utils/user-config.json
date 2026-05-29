@@ -1,13 +1,9 @@
 {
   "defaultProviders": [],
   "configVersion": 1,
-  "tmdbApiKeys": [
-    "338a47b75eab45d9e64e67088f910f93"
-  ],
+  "tmdbApiKeys": [],
   "enableShowboxProvider": true,
-  "febboxCookies": [
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3Nzg5MjM2NDksIm5iZiI6MTc3ODkyMzY0OSwiZXhwIjoxODEwMDI3NjY5LCJkYXRhIjp7InVpZCI6ODc2NTEwLCJ0b2tlbiI6IjYxNmZlZDdjZDRjMzY1OWJmNWMzNTg5MGUzOTQ4Y2MyIn19.ESauZ9IInk5Iafpt-zLI64u4hMzsby_Spy0tkTJ6KuY"
-  ],
+  "febboxCookies": [],
   "enable4khdhubProvider": true,
   "enableVixsrcProvider": true,
   "enableProxy": false,
@@ -21,6 +17,5 @@
   "enableVidlinkProvider": true,
   "enableVideasyProvider": true,
   "enableLordflixProvider": true,
-  "port": 8787,
   "enableNotorrentProvider": true
 }
