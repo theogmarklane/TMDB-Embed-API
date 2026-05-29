@@ -12,6 +12,7 @@ RUN npm install --omit=dev
 # Copy only required source (avoid sending screenshots, node_modules already installed)
 COPY apiServer.js ./
 COPY providers ./providers
+COPY proxy ./proxy
 COPY public ./public
 COPY utils ./utils
 COPY README.md ./
@@ -33,6 +34,7 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/apiServer.js ./
 COPY --from=build /app/public ./public
 COPY --from=build /app/providers ./providers
+COPY --from=build /app/proxy ./proxy
 COPY --from=build /app/utils ./utils
 COPY --from=build /app/package.json ./
 COPY --from=build /app/README.md ./

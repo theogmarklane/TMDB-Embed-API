@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/Node.js-18%2B-brightgreen?style=flat" />
   <img src="https://img.shields.io/badge/Status-Active-success?style=flat" />
   <img src="https://img.shields.io/badge/License-MIT-blue?style=flat" />
-  <img src="https://img.shields.io/badge/Version-1.1.0-informational?style=flat" />
+  <img src="https://img.shields.io/badge/Version-1.1.1-informational?style=flat" />
   <img src="https://img.shields.io/docker/pulls/inside4ndroid/tmdb-embed-api?label=Docker%20Pulls&style=flat" />
 </p>
 
@@ -34,7 +34,7 @@
 
 ## ✨ Features
 - **Multi‑TMDB Key Rotation** – Supply multiple API keys; one is chosen randomly per request.
-- **Provider Aggregation** – Pluggable providers (Showbox/FebBox, 4KHDHub, MoviesMod, VidZee, VixSrc, Videasy, Vidlink, LordFlix, NoTorrent, DahmerMovies) with per‑provider enable toggles + default selection.
+- **Provider Aggregation** – Pluggable providers (Showbox/FebBox, 4KHDHub, VixSrc, Videasy, Vidlink, LordFlix, NoTorrent, DahmerMovies) with per‑provider enable toggles + default selection.
 - **🔥 Plugin System** – Drop new provider files in `providers/` and add its exported function to the registry map (`providers/registry.js` → `providerFunctionMap`).
 - **Dynamic Filtering** – Minimum quality presets, custom JSON quality map, codec exclusion rules (presets + JSON).
 - **Runtime Overrides UI** – Fully interactive web admin at `/` (login protected) writing to `utils/user-config.json`.
@@ -199,7 +199,7 @@ Saving in the UI writes only changed keys. Setting a field to empty removes the 
 **Override File:** `utils/user-config.json`
 ```json
 {
-  "defaultProviders": ["4khdhub","moviesmod"],
+  "defaultProviders": ["4khdhub"],
   "tmdbApiKeys": ["KEY_A","KEY_B"],
   "enable4khdhubProvider": true
 }
@@ -227,8 +227,6 @@ The API supports a plugin system. Drop a new provider file in the `providers/` f
 ### Current Built-in Providers
 - `showbox` - Showbox/FebBox streams (requires FebBox JWT cookie)
 - `4khdhub` - 4KHDHub streams
-- `moviesmod` - MoviesMod streams
-- `vidzee` - VidZee streams
 - `vixsrc` - VixSrc streams
 - `videasy` - Videasy streams (10 servers via enc-dec.app)
 - `vidlink` - Vidlink streams (via enc-dec.app)
@@ -246,8 +244,6 @@ The API supports a plugin system. Drop a new provider file in the `providers/` f
    const providerFunctionMap = {
      'Showbox.js': 'getStreamsFromTmdbId',
      '4khdhub.js': 'get4KHDHubStreams',
-     'moviesmod.js': 'getMoviesModStreams',
-     'VidZee.js': 'getVidZeeStreams',
      'vixsrc.js': 'getVixsrcStreams',
      'videasy.js': 'getVideasyStreams',
      'vidlink.js': 'getVidlinkStreams',

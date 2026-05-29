@@ -153,15 +153,12 @@ function fillForm(data){
 		const tmdbMissing = !((override.tmdbApiKeys && override.tmdbApiKeys.length) || (merged.tmdbApiKeys && merged.tmdbApiKeys.length) || override.tmdbApiKey || merged.tmdbApiKey);
 		const tmdbProvidersEnabled = [
 			merged.enableShowboxProvider !== false,
-			merged.enable4khdhubProvider !== false,
-			merged.enableMoviesmodProvider !== false
+			merged.enable4khdhubProvider !== false
 		].some(Boolean);
 		tmdbBanner.style.display = (tmdbMissing && tmdbProvidersEnabled)? 'block':'none';
 	}
 	const advBools = [
 		['enable4khdhubProvider','adv_enable4khdhub'],
-		['enableMoviesmodProvider','adv_enableMoviesmod'],
-		['enableVidzeeProvider','adv_enableVidzee'],
 		['enableVixsrcProvider','adv_enableVixsrc'],
 		['enableProxy','adv_enableProxy'],
 		['disableCache','adv_disableCache'],
@@ -243,8 +240,6 @@ async function save(){
 	}
 	const boolMap = {
 		adv_enable4khdhub:'enable4khdhubProvider',
-		adv_enableMoviesmod:'enableMoviesmodProvider',
-		adv_enableVidzee:'enableVidzeeProvider',
 		adv_enableVixsrc:'enableVixsrcProvider',
 		adv_enableProxy:'enableProxy',
 		adv_disableCache:'disableCache',
@@ -335,8 +330,6 @@ async function clearAll(){
 		// Provider enable flags default to true
 		enableShowboxProvider: true,
 		enable4khdhubProvider: true,
-		enableMoviesmodProvider: true,
-		enableVidzeeProvider: true,
 		enableVixsrcProvider: true,
 		enableProxy: false,
 		// Other defaults

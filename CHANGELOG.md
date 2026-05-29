@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.1] - 2026-05-29
+
+### Removed
+- **MoviesMod provider**: Permanently removed — `moviesmod.farm` returns HTTP 403 with Cloudflare managed challenge (`cf-mitigated: challenge`). No server-side workaround exists without a browser runtime.
+- **VidZee provider**: Permanently removed — hardcoded AES-256-GCM salt is no longer valid against VidZee's current API key blob, causing all decryption to fail.
+
+### Fixed
+- **LordFlix provider**: Updated upstream domain (`network.hasta-la-vista.site` → `snowhouse.lordflix.club`) and refreshed server list (10 servers).
+- **Docker startup crash**: Added missing `COPY proxy ./proxy` to both build and runtime stages in `Dockerfile` — `apiServer.js` unconditionally requires `./proxy/proxyServer` at startup.
+
+---
+
 ## [1.1.0] - 2026-05-16
 
 ## Dependency Security
