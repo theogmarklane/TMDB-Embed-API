@@ -1,0 +1,6 @@
+name = "tmdb-embed-api"
+main = "worker/src/index.js"
+compatibility_date = "2026-07-14"
+
+[vars]
+TMDB_API_KEY = ""

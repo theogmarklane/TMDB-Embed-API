@@ -1,10 +1,12 @@
 {
   "defaultProviders": [],
   "configVersion": 1,
-  "tmdbApiKeys": [],
+  "tmdbApiKeys": [
+    "3875b60decd89ee28b55ddaa0e22bed0"
+  ],
   "enableShowboxProvider": true,
   "febboxCookies": [],
-  "enable4khdhubProvider": true,
+  "enable4khdhubProvider": false,
   "enableVixsrcProvider": true,
   "enableProxy": false,
   "disableCache": false,
@@ -17,5 +19,6 @@
   "enableVidlinkProvider": true,
   "enableVideasyProvider": true,
   "enableLordflixProvider": true,
-  "enableNotorrentProvider": true
+  "enableNotorrentProvider": true,
+  "port": 8787
 }

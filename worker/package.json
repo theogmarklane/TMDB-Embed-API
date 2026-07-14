@@ -1,0 +1,5 @@
+{
+  "name": "tmdb-embed-api-worker",
+  "private": true,
+  "type": "module"
+}
