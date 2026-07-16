@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { getTmdbApiKey } = require('../utils/tmdbKey');
+const crypto = require('crypto');
 
 const LORDFLIX_HEADERS = {
     'Accept': '*/*',
@@ -12,6 +13,50 @@ const LORDFLIX_API = 'https://snowhouse.lordflix.club';
 const MULTI_DECRYPT_API = 'https://enc-dec.app/api';
 const SERVERS = ['Berlin', 'Marseille', 'Backrooms', 'Phoenix', 'Oslo', 'Luna', 'Sakura', 'Rio', 'Ativa', 'Moscow'];
 
+// Challenge solver
+async function solveChallenge() {
+    try {
+        const challengeRes = await axios.get('https://hongkong.lordflix.club/challenge', {
+            headers: LORDFLIX_HEADERS,
+            timeout: 8000
+        });
+        const challengeData = challengeRes.data;
+
+        const maxNumber = challengeData.maxnumber;
+        const challenge = challengeData.challenge;
+        const salt = challengeData.salt;
+
+        let solvedNumber = null;
+        for (let number = 0; number <= maxNumber; number++) {
+            const hash = crypto.createHash('sha256')
+                .update(`${salt}${number}`)
+                .digest('hex');
+            if (hash === challenge) {
+                solvedNumber = number;
+                break;
+            }
+        }
+
+        if (solvedNumber === null) {
+            console.error('[Lordflix] Failed to solve challenge');
+            return null;
+        }
+
+        const payload = {
+            algorithm: challengeData.algorithm,
+            challenge: challengeData.challenge,
+            number: solvedNumber,
+            salt: challengeData.salt,
+            signature: challengeData.signature,
+        };
+
+        return Buffer.from(JSON.stringify(payload)).toString('base64');
+    } catch (err) {
+        console.error(`[Lordflix] Challenge solving failed: ${err.message}`);
+        return null;
+    }
+}
+
 // Matches the reference project's encodeQuote: encodeURIComponent with + encoded as %20
 function encodeQuote(str) {
     return encodeURIComponent(str).replace(/%20/g, '+').replace(/\+/g, '%20');
@@ -19,7 +64,6 @@ function encodeQuote(str) {
 
 async function getLordflixStreams(tmdbId, mediaType = 'movie', seasonNum = null, episodeNum = null) {
     console.log(`[Lordflix] Fetching streams for TMDB ID: ${tmdbId}, Type: ${mediaType}`);
-
     const tmdbKey = getTmdbApiKey();
     if (!tmdbKey) {
         console.error('[Lordflix] No TMDB API key configured.');
@@ -53,11 +97,24 @@ async function getLordflixStreams(tmdbId, mediaType = 'movie', seasonNum = null,
     const titleEnc = encodeQuote(info.title);
     const streams = [];
 
+    // Solve challenge once for all servers
+    const xAttest = await solveChallenge();
+    if (!xAttest) {
+        console.error('[Lordflix] Could not solve challenge. Aborting.');
+        return [];
+    }
+
+    const requestHeaders = {
+        ...LORDFLIX_HEADERS,
+        'x-attest': xAttest
+    };
+
     // Step 2: Query each server in parallel
     await Promise.all(SERVERS.map(async (server) => {
         try {
             let serverUrl = `${LORDFLIX_API}/?title=${titleEnc}&type=${typeParam}&year=${info.year || ''}`
                 + `&imdb=${info.imdbId}&tmdb=${tmdbId}&server=${server}`;
+            
             if (mediaType === 'tv') {
                 serverUrl += `&season=${seasonNum}&episode=${episodeNum}`;
             }
@@ -75,10 +132,11 @@ async function getLordflixStreams(tmdbId, mediaType = 'movie', seasonNum = null,
 
             // Step 4: Fetch encrypted stream data from proxy URL
             const remoteEncRes = await axios.get(proxyEncUrl, {
-                headers: LORDFLIX_HEADERS,
+                headers: requestHeaders,
                 timeout: 8000,
                 responseType: 'text'
             });
+
             const remoteEncData = typeof remoteEncRes.data === 'string'
                 ? remoteEncRes.data
                 : JSON.stringify(remoteEncRes.data);
@@ -86,8 +144,12 @@ async function getLordflixStreams(tmdbId, mediaType = 'movie', seasonNum = null,
             // Step 5: Decrypt via enc-dec.app
             const decRes = await axios.post(`${MULTI_DECRYPT_API}/dec-lordflix`,
                 { text: remoteEncData, sign: signature },
-                { headers: { 'Content-Type': 'application/json' }, timeout: 8000 }
+                { 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    timeout: 8000 
+                }
             );
+
             const finalJson = decRes.data;
             if (!finalJson || finalJson.status !== 200 || !finalJson.result || finalJson.result.error) return;
 
