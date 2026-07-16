@@ -4,21 +4,22 @@ const { getTmdbApiKey } = require('../utils/tmdbKey');
 const VIDEASY_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
     'Accept': 'application/json, text/plain, */*',
-    'Origin': 'https://player.videasy.to',
-    'Referer': 'https://player.videasy.to/'
+    'Origin': 'https://player.videasy.net',
+    'Referer': 'https://player.videasy.net/'
 };
 
 // Each server maps a name to its API URL. moviesOnly:true skips TV requests.
 const SERVERS = {
-    'Neon':   { url: 'https://api.wingsdatabase.com/neon2/sources-with-title' },
-    'Yoru':   { url: 'https://api.wingsdatabase.com/cdn/sources-with-title', moviesOnly: true },
-    'Tejo':   { url: 'https://api.wingsdatabase.com/tejo/sources-with-title', },
-    'Cypher': { url: 'https://api.wingsdatabase.com/downloader2/sources-with-title' },
-    'Omen':   { url: 'https://api.wingsdatabase.com/lamovie/sources-with-title' },
-    'Breach': { url: 'https://api.wingsdatabase.com/m4uhd/sources-with-title' },
-    'Sage':   { url: 'https://api.wingsdatabase.com/ym/sources-with-title' },
-    'Vyse':   { url: 'https://api.wingsdatabase.com/hdmovie/sources-with-title' },
-    'Raze':   { url: 'https://api.wingsdatabase.com/superflix/sources-with-title' }
+    'Neon':   { url: 'https://api.videasy.net/myflixerzupcloud/sources-with-title' },
+    'Yoru':   { url: 'https://api.videasy.net/cdn/sources-with-title', moviesOnly: true },
+    'Cypher': { url: 'https://api.videasy.net/moviebox/sources-with-title' },
+    'Reyna':  { url: 'https://api.videasy.net/primewire/sources-with-title' },
+    'Omen':   { url: 'https://api.videasy.net/onionplay/sources-with-title' },
+    'Breach': { url: 'https://api.videasy.net/m4uhd/sources-with-title' },
+    'Ghost':  { url: 'https://api.videasy.net/primesrcme/sources-with-title' },
+    'Sage':   { url: 'https://api.videasy.net/1movies/sources-with-title' },
+    'Vyse':   { url: 'https://api.videasy.net/hdmovie/sources-with-title' },
+    'Raze':   { url: 'https://api.videasy.net/superflix/sources-with-title' }
 };
 
 const DECRYPT_URL = 'https://enc-dec.app/api/dec-videasy';
@@ -97,8 +98,8 @@ async function getVideasyStreams(tmdbId, mediaType = 'movie', seasonNum = null, 
                     quality: s.quality || 'Auto',
                     provider: 'Videasy',
                     headers: {
-                        'Referer': 'https://player.videasy.to/',
-                        'Origin': 'https://player.videasy.to'
+                        'Referer': 'https://player.videasy.net/',
+                        'Origin': 'https://player.videasy.net'
                     }
                 });
             }
