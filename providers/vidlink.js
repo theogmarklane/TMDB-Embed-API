@@ -6,56 +6,59 @@ const VIDLINK_HEADERS = {
     'Referer': 'https://vidlink.pro/'
 };
 
-const API_BASE = 'https://enc-dec.app/api';
-
-function validate(data, path) {
-    if (!data || data.status !== 200) {
-        console.error(`\n${'-'.repeat(25)} API ERROR ${'-'.repeat(25)}\n`);
-        console.error(`Path: ${path}`);
-        console.error(`Status Code: ${data && data.status}`);
-        console.error(`Error: ${(data && data.error) || 'unknown'}`);
-        throw new Error('Vidlink API error');
-    }
-    return data.result;
-}
-
 async function getVidlinkStreams(tmdbId, mediaType = 'movie', seasonNum = null, episodeNum = null) {
     console.log(`[Vidlink] Fetching streams for TMDB ID: ${tmdbId}, Type: ${mediaType}`);
-
+    
     try {
-        const encUrl = `${API_BASE}/enc-vidlink?text=${encodeURIComponent(String(tmdbId))}`;
-        const encRes = await axios.get(encUrl, { headers: VIDLINK_HEADERS, timeout: 8000 });
-        const encodedTmdb = validate(encRes.data, encUrl);
+        // Step 1: Encrypt the TMDB ID via enc-dec.app
+        const encRes = await axios.get(
+            `https://enc-dec.app/api/enc-vidlink?text=${encodeURIComponent(String(tmdbId))}`,
+            { timeout: 8000 }
+        );
+        
+        const encodedTmdb = encRes.data && encRes.data.result;
         if (!encodedTmdb) {
             console.log('[Vidlink] Encryption step returned no result.');
             return [];
         }
 
-        const type = mediaType === 'tv' ? 'tv' : 'movie';
-        const apiUrl = type === 'tv'
-            ? `https://vidlink.pro/api/b/tv/${encodedTmdb}/${seasonNum || ''}/${episodeNum || ''}`
-            : `https://vidlink.pro/api/b/movie/${encodedTmdb}`;
+        // Step 2: Fetch stream playlist from Vidlink API
+        let apiUrl;
+        if (mediaType === 'tv') {
+            apiUrl = `https://vidlink.pro/api/b/tv/${encodedTmdb}/${seasonNum}/${episodeNum}`;
+        } else {
+            apiUrl = `https://vidlink.pro/api/b/movie/${encodedTmdb}`;
+        }
 
-        const apiRes = await axios.get(apiUrl, { headers: VIDLINK_HEADERS, timeout: 8000 });
-        const data = apiRes.data && apiRes.data.stream ? apiRes.data.stream : apiRes.data;
-
-        const playlist = data && (data.playlist || data.url || (Array.isArray(data) && data[0] && (data[0].playlist || data[0].url)));
+        const apiRes = await axios.get(apiUrl, { 
+            headers: VIDLINK_HEADERS, 
+            timeout: 8000 
+        });
+        
+        const playlist = apiRes.data && apiRes.data.stream && apiRes.data.stream.playlist;
+        
         if (!playlist) {
             console.log('[Vidlink] No playlist URL in response.');
+            console.log('Full response:', apiRes.data); // Added for debugging
             return [];
         }
 
         console.log(`[Vidlink] Got stream.`);
+
         return [{
             name: 'Vidlink',
             title: 'Vidlink',
             url: playlist,
             quality: 'Auto',
             provider: 'Vidlink',
-            headers: VIDLINK_HEADERS
+            headers: { 'Referer': 'https://vidlink.pro' }
         }];
+
     } catch (err) {
         console.error(`[Vidlink] Error: ${err.message}`);
+        if (err.response) {
+            console.error(`Status: ${err.response.status}`, err.response.data);
+        }
         return [];
     }
 }
