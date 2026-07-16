@@ -1,24 +1,30 @@
 {
+  "port": 8787,
+  "defaultRegion": null,
   "defaultProviders": [],
-  "configVersion": 1,
+  "minQualitiesRaw": null,
+  "excludeCodecsRaw": null,
   "tmdbApiKeys": [
     "3875b60decd89ee28b55ddaa0e22bed0"
   ],
-  "enableShowboxProvider": true,
-  "febboxCookies": [],
-  "enable4khdhubProvider": false,
-  "enableVixsrcProvider": true,
-  "enableProxy": true,
+  "febboxCookies": [
+    "ui:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODQwODgzMjQsIm5iZiI6MTc4NDA4ODMyNCwiZXhwIjoxODE1MTkyMzQ0LCJkYXRhIjp7InVpZCI6MjE3MjkyMiwidG9rZW4iOiJlN2Q0MDQ3ZTllYjc5YmRjN2YxY2FlMzc5MzE5NDU5NiJ9fQ.c61crNddPX9__4vEG2y9KkzfaT8cIUsMRPfAPpFuluU"
+  ],
   "disableCache": false,
   "enablePStreamApi": true,
+  "showboxCacheDir": null,
   "disableUrlValidation": false,
   "disable4khdhubUrlValidation": false,
-  "excludeCodecsRaw": "{\"excludeDV\":false,\"excludeHDR\":false}",
-  "minQualitiesRaw": "all",
-  "enableUhdmoviesProvider": false,
-  "enableVidlinkProvider": true,
-  "enableVideasyProvider": true,
+  "enableProxy": true,
+  "enable4khdhubProvider": true,
+  "enableShowboxProvider": true,
+  "enableDahmermoviesProvider": true,
   "enableLordflixProvider": true,
   "enableNotorrentProvider": true,
-  "port": 8787
+  "enableVideasyProvider": true,
+  "enableVidlinkProvider": true,
+  "enableVixsrcProvider": true,
+  "configVersion": 1,
+  "minQualities": null,
+  "excludeCodecs": null
 }
