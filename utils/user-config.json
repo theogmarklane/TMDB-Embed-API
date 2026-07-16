@@ -10,6 +10,15 @@
   "febboxCookies": [
     "ui:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODQwODgzMjQsIm5iZiI6MTc4NDA4ODMyNCwiZXhwIjoxODE1MTkyMzQ0LCJkYXRhIjp7InVpZCI6MjE3MjkyMiwidG9rZW4iOiJlN2Q0MDQ3ZTllYjc5YmRjN2YxY2FlMzc5MzE5NDU5NiJ9fQ.c61crNddPX9__4vEG2y9KkzfaT8cIUsMRPfAPpFuluU"
   ],
+  "defaultProviders": [
+  ],
+  "configVersion": 1,
+  "tmdbApiKeys": ["3875b60decd89ee28b55ddaa0e22bed0"],
+  "enableShowboxProvider": true,
+  "febboxCookies": ["eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODQwODgzMjQsIm5iZiI6MTc4NDA4ODMyNCwiZXhwIjoxODE1MTkyMzQ0LCJkYXRhIjp7InVpZCI6MjE3MjkyMiwidG9rZW4iOiJlN2Q0MDQ3ZT>"],
+  "enable4khdhubProvider": false,
+  "enableVixsrcProvider": false,
+  "enableProxy": true,
   "disableCache": false,
   "enablePStreamApi": true,
   "showboxCacheDir": null,
@@ -19,6 +28,11 @@
   "enable4khdhubProvider": false,
   "enableShowboxProvider": true,
   "enableDahmermoviesProvider": true,
+  "excludeCodecsRaw": "{\"excludeDV\":false,\"excludeHDR\":false}",
+  "minQualitiesRaw": "all",
+  "enableUhdmoviesProvider": false,
+  "enableVidlinkProvider": true,
+  "enableVideasyProvider": false,
   "enableLordflixProvider": false,
   "enableNotorrentProvider": true,
   "enableVideasyProvider": false,

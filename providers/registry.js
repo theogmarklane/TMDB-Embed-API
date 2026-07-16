@@ -1,4 +1,4 @@
-const { config } = require('../utils/config');
+const { config, reloadConfig } = require('../utils/config');
 const fs = require('fs');
 const path = require('path');
 
@@ -109,16 +109,29 @@ function createFetchFunction(providerInfo) {
   };
 }
 
-// Initialize providers - always load all; enabled state is checked dynamically from live config
-const providerFiles = getProviderFiles();
-const providers = [];
+const providers = new Map();
 
-for (const providerInfo of providerFiles) {
-  providers.push({
-    name: providerInfo.name,
-    fetch: createFetchFunction(providerInfo)
-  });
-  console.log(`[registry] ${providerInfo.name} provider loaded`);
+function syncProviders() {
+  const providerFiles = getProviderFiles();
+  const activeNames = new Set(providerFiles.map(p => p.name));
+
+  for (const name of Array.from(providers.keys())) {
+    if (!activeNames.has(name)) providers.delete(name);
+  }
+
+  for (const providerInfo of providerFiles) {
+    const existing = providers.get(providerInfo.name);
+    if (existing && existing.file === providerInfo.file && existing.functionName === providerInfo.functionName) {
+      continue;
+    }
+    providers.set(providerInfo.name, {
+      name: providerInfo.name,
+      file: providerInfo.file,
+      functionName: providerInfo.functionName,
+      fetch: createFetchFunction(providerInfo)
+    });
+    console.log(`[registry] ${providerInfo.name} provider loaded`);
+  }
 }
 
 function isProviderEnabled(name) {
@@ -126,13 +139,19 @@ function isProviderEnabled(name) {
   return config[flag] !== false;
 }
 
-function listProviders() { return providers.map(p => ({ name: p.name, enabled: isProviderEnabled(p.name) })); }
+function listProviders() {
+  reloadConfig();
+  syncProviders();
+  return Array.from(providers.values()).map(p => ({ name: p.name, enabled: isProviderEnabled(p.name) }));
+}
 function getProvider(name) {
-  const p = providers.find(p => p.name === name.toLowerCase());
+  reloadConfig();
+  syncProviders();
+  const p = providers.get(name.toLowerCase());
   if (!p) return null;
   return { ...p, enabled: isProviderEnabled(p.name) };
 }
 
-function getCookieStats() { return lastCookieStats; }
+function getCookieStats() { reloadConfig(); return lastCookieStats; }
 
 module.exports = { listProviders, getProvider, getCookieStats };

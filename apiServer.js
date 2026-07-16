@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const os = require('os');
-const { config, saveConfigPatch, OVERRIDE_PATH } = require('./utils/config');
+const { config, reloadConfig, saveConfigPatch, OVERRIDE_PATH } = require('./utils/config');
 const { authenticate, issueSession, requireAuth, getSession, updatePassword } = require('./utils/auth');
 const path = require('path');
 const { listProviders, getProvider, getCookieStats } = require('./providers/registry');
@@ -198,6 +198,7 @@ app.get('/api/config', (req,res) => {
   try { if (fs.existsSync(OVERRIDE_PATH)) override = JSON.parse(fs.readFileSync(OVERRIDE_PATH,'utf8')); } catch (e) {
     // ignore JSON parse or fs errors reading override; return base config
   }
+  reloadConfig();
   res.json({ success:true, merged: config, override, overridePath: OVERRIDE_PATH });
 });
 app.post('/api/config', (req,res) => {
@@ -274,6 +275,7 @@ app.get('/api/status', (req,res) => {
     'POST /api/config',
     'GET /api/config'
   ];
+  reloadConfig();
   // Determine cookie requirement heuristically (currently Showbox / PStream)
   const cookieRequiredProviders = new Set(['showbox']);
   const providers = listProviders().map(p => {
@@ -320,6 +322,7 @@ app.get('/api/providers/:name', (req,res) => {
 
 // Aggregate streams across all enabled providers
 app.get('/api/streams/:type/:tmdbId', async (req,res) => {
+  reloadConfig();
   const { type, tmdbId } = req.params;
   if (!['movie','series'].includes(type)) return res.status(400).json({ success:false, error:'INVALID_TYPE' });
   const season = req.query.season ? Number(req.query.season) : null;
@@ -365,6 +368,7 @@ app.get('/api/streams/:type/:tmdbId', async (req,res) => {
 
 // Provider-specific streams
 app.get('/api/streams/:provider/:type/:tmdbId', async (req,res) => {
+  reloadConfig();
   const { provider, type, tmdbId } = req.params;
   if (!['movie','series'].includes(type)) return res.status(400).json({ success:false, error:'INVALID_TYPE' });
   const season = req.query.season ? Number(req.query.season) : null;

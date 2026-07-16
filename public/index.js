@@ -262,6 +262,8 @@ async function save(){
 		if(!js.success) throw new Error(js.error||'Save failed');
 		setStatus('Saved ✔');
 		fillForm(js);
+		renderProviderMatrix(js.merged);
+		reloadLiveOnly();
 	} catch(e){ setStatus(e.message,true); }
 }
 
