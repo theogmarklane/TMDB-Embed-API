@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+const INITIAL_ENV = { ...process.env };
 // Relocated user-config.json into utils directory; maintain backward-compatible fallback
 const NEW_OVERRIDE_PATH = path.join(process.cwd(), 'utils', 'user-config.json');
 const LEGACY_OVERRIDE_PATH = path.join(process.cwd(), 'user-config.json');
@@ -159,29 +160,29 @@ function applyConfigToEnv(cfg){
 function loadConfig() {
   // Start with env for backward compat, then override with user-config.json
   const envCfg = {
-    port: Number(process.env.API_PORT) || 8787,
-    defaultRegion: process.env.DEFAULT_REGION || process.env.FEBBOX_REGION || null,
-  defaultProviders: (process.env.DEFAULT_PROVIDERS || '').split(/[\s,]+/).map(p=>p.trim().toLowerCase()).filter(Boolean),
-    minQualitiesRaw: process.env.MIN_QUALITIES || null,
-    excludeCodecsRaw: process.env.EXCLUDE_CODECS || null,
-    tmdbApiKey: process.env.TMDB_API_KEY || null,
-  tmdbApiKeys: parseJsonMaybe(process.env.TMDB_API_KEYS) || null,
-    febboxCookies: parseCookies(process.env.FEBBOX_COOKIES),
+    port: Number(INITIAL_ENV.API_PORT) || 8787,
+    defaultRegion: INITIAL_ENV.DEFAULT_REGION || INITIAL_ENV.FEBBOX_REGION || null,
+  defaultProviders: (INITIAL_ENV.DEFAULT_PROVIDERS || '').split(/[\s,]+/).map(p=>p.trim().toLowerCase()).filter(Boolean),
+    minQualitiesRaw: INITIAL_ENV.MIN_QUALITIES || null,
+    excludeCodecsRaw: INITIAL_ENV.EXCLUDE_CODECS || null,
+    tmdbApiKey: INITIAL_ENV.TMDB_API_KEY || null,
+  tmdbApiKeys: parseJsonMaybe(INITIAL_ENV.TMDB_API_KEYS) || null,
+    febboxCookies: parseCookies(INITIAL_ENV.FEBBOX_COOKIES),
     // Extended advanced config (may not exist in env)
-    disableCache: process.env.DISABLE_CACHE,
-    enablePStreamApi: process.env.ENABLE_PSTREAM_API,
-    showboxCacheDir: process.env.SHOWBOX_CACHE_DIR || null,
+    disableCache: INITIAL_ENV.DISABLE_CACHE,
+    enablePStreamApi: INITIAL_ENV.ENABLE_PSTREAM_API,
+    showboxCacheDir: INITIAL_ENV.SHOWBOX_CACHE_DIR || null,
     // Proxy/env paths removed; always direct connections
-    disableUrlValidation: process.env.DISABLE_URL_VALIDATION,
-    disable4khdhubUrlValidation: process.env.DISABLE_4KHDHUB_URL_VALIDATION,
-    enableProxy: process.env.ENABLE_PROXY
+    disableUrlValidation: INITIAL_ENV.DISABLE_URL_VALIDATION,
+    disable4khdhubUrlValidation: INITIAL_ENV.DISABLE_4KHDHUB_URL_VALIDATION,
+    enableProxy: INITIAL_ENV.ENABLE_PROXY
   };
   
   // Dynamic provider enable flags from env
   const providerNames = getProviderNames();
   providerNames.forEach(name => {
     const envName = `ENABLE_${name.toUpperCase()}_PROVIDER`;
-    envCfg[`enable${name.charAt(0).toUpperCase() + name.slice(1)}Provider`] = process.env[envName];
+    envCfg[`enable${name.charAt(0).toUpperCase() + name.slice(1)}Provider`] = INITIAL_ENV[envName];
   });
   
   const override = readOverrideFile();
@@ -191,7 +192,17 @@ function loadConfig() {
   return normalized;
 }
 
-const config = loadConfig();
+const config = {};
+
+function replaceConfig(nextConfig) {
+  for (const key of Object.keys(config)) {
+    delete config[key];
+  }
+  Object.assign(config, nextConfig);
+  return config;
+}
+
+replaceConfig(loadConfig());
 
 function saveConfigPatch(patch) {
   const currentOverride = readOverrideFile();
@@ -200,10 +211,10 @@ function saveConfigPatch(patch) {
   // Remove keys set to null to fall back to env
   Object.keys(updated).forEach(k => { if (updated[k] === null) delete updated[k]; });
   if (writeOverrideFile(updated)) {
-    Object.assign(config, loadConfig());
+    replaceConfig(loadConfig());
     return true;
   }
   return false;
 }
 
-module.exports = { config, reloadConfig: () => Object.assign(config, loadConfig()), saveConfigPatch, OVERRIDE_PATH, CONFIG_SCHEMA_VERSION };
+module.exports = { config, reloadConfig: () => replaceConfig(loadConfig()), saveConfigPatch, OVERRIDE_PATH, CONFIG_SCHEMA_VERSION };
