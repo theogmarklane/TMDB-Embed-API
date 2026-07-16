@@ -9,10 +9,8 @@ const providerCache = new Map();
 const providerFunctionMap = {
   'Showbox.js': 'getStreamsFromTmdbId',
   '4khdhub.js': 'get4KHDHubStreams',
-  'vixsrc.js': 'getVixsrcStreams',
   'videasy.js': 'getVideasyStreams',
   'vidlink.js': 'getVidlinkStreams',
-  'lordflix.js': 'getLordflixStreams',
   'notorrent.js': 'getNotorrentStreams',
   'dahmermovies.js': 'getDahmermoviesStreams',
 };

@@ -1,7 +1,7 @@
 {
   "port": 8787,
   "defaultRegion": null,
-  "defaultProviders": [],
+  "defaultProviders": [notorrent],
   "minQualitiesRaw": null,
   "excludeCodecsRaw": null,
   "tmdbApiKeys": [
@@ -16,14 +16,14 @@
   "disableUrlValidation": false,
   "disable4khdhubUrlValidation": false,
   "enableProxy": true,
-  "enable4khdhubProvider": true,
+  "enable4khdhubProvider": false,
   "enableShowboxProvider": true,
   "enableDahmermoviesProvider": true,
-  "enableLordflixProvider": true,
+  "enableLordflixProvider": false,
   "enableNotorrentProvider": true,
-  "enableVideasyProvider": true,
+  "enableVideasyProvider": false,
   "enableVidlinkProvider": true,
-  "enableVixsrcProvider": true,
+  "enableVixsrcProvider": false,
   "configVersion": 1,
   "minQualities": null,
   "excludeCodecs": null
