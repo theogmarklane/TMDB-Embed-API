@@ -11,14 +11,14 @@
   "febboxCookies": [
     "ui:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3ODQwODgzMjQsIm5iZiI6MTc4NDA4ODMyNCwiZXhwIjoxODE1MTkyMzQ0LCJkYXRhIjp7InVpZCI6MjE3MjkyMiwidG9rZW4iOiJlN2Q0MDQ3ZTllYjc5YmRjN2YxY2FlMzc5MzE5NDU5NiJ9fQ.c61crNddPX9__4vEG2y9KkzfaT8cIUsMRPfAPpFuluU"
   ],
-  "enable4khdhubProvider": false,
+  "enable4khdhubProvider": true,
   "enableDahmermoviesProvider": true,
-  "enableLordflixProvider": false,
+  "enableLordflixProvider": true,
   "enableNotorrentProvider": true,
   "enableShowboxProvider": true,
-  "enableVideasyProvider": false,
+  "enableVideasyProvider": true,
   "enableVidlinkProvider": true,
-  "enableVixsrcProvider": false,
+  "enableVixsrcProvider": true,
   "enableProxy": false,
   "disableCache": false,
   "enablePStreamApi": true,
