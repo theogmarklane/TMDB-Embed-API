@@ -19,7 +19,7 @@
   "enableVideasyProvider": false,
   "enableVidlinkProvider": true,
   "enableVixsrcProvider": false,
-  "enableProxy": true,
+  "enableProxy": false,
   "disableCache": false,
   "enablePStreamApi": true,
   "showboxCacheDir": null,
